@@ -1,22 +1,27 @@
-const { Sequelize } = require('sequelize');
-const modelProduct = require('./models/Product.js');
-const modelUser = require('./models/User.js');
-const modelOrder = require('./models/Order.js');
-const modelOrderDetail = require('./models/OrderDetail');
-const modelFav = require('./models/Fav');
-const modelReview = require('./models/Review');
-const modelCategory = require('./models/Category');
-const modelImage = require('./models/Image');
-const modelOffer = require('./models/Offer');
-require('dotenv').config();
+const { Sequelize } = require("sequelize");
+const modelProduct = require("./models/Product.js");
+const modelUser = require("./models/User.js");
+const modelOrder = require("./models/Order.js");
+const modelOrderDetail = require("./models/OrderDetail");
+const modelFav = require("./models/Fav");
+const modelReview = require("./models/Review");
+const modelCategory = require("./models/Category");
+const modelImage = require("./models/Image");
+const modelOffer = require("./models/Offer");
+require("dotenv").config();
 
 const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, DB_PORT } = process.env;
 
 // postgresql://${{ DB_USER }}:${{ DB_PASSWORD }}@${{ DB_HOST }}:${{ DB_PORT }}/${{ DB_NAME }}
-const sequelize = new Sequelize(`postgres://${ DB_USER }:${ DB_PASSWORD }@${ DB_HOST }:${ DB_PORT }/${ DB_NAME }`, {
-  logging: false, // set to console.log to see the raw SQL queries
-  native: false, // lets Sequelize know we can use pg-native for ~30% more speed
-});
+const sequelize = new Sequelize(
+  // `postgres://${ DB_USER }:${ DB_PASSWORD }@${ DB_HOST }:${ DB_PORT }/${ DB_NAME }`,
+  `postgresql://postgres:j33zusMan1.@db.yetdyxirefojntlzwdzt.supabase.co:5432/postgres`,
+
+  {
+    logging: false, // set to console.log to see the raw SQL queries
+    native: false, // lets Sequelize know we can use pg-native for ~30% more speed
+  }
+);
 
 modelProduct(sequelize);
 modelUser(sequelize);
@@ -28,10 +33,20 @@ modelCategory(sequelize);
 modelImage(sequelize);
 modelOffer(sequelize);
 
-const { Product, User, Order, OrderDetail, Fav, Review, Category, Image, Offer } = sequelize.models;
+const {
+  Product,
+  User,
+  Order,
+  OrderDetail,
+  Fav,
+  Review,
+  Category,
+  Image,
+  Offer,
+} = sequelize.models;
 
-Order.belongsToMany(Product, { through : OrderDetail})
-Product.belongsToMany(Order, { through: OrderDetail})
+Order.belongsToMany(Product, { through: OrderDetail });
+Product.belongsToMany(Order, { through: OrderDetail });
 
 User.belongsToMany(Product, { through: Fav });
 Product.belongsToMany(User, { through: Fav });
